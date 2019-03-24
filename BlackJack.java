@@ -21,7 +21,7 @@ public class BlackJack {
 	public ArrayList<Card> Human_cards = myDeck.getInitialCards();
 	private ArrayList<Card> Computer_cards = myDeck.getInitialCards();
 
-	public BranchBlackJack() {
+	public BlackJack() {
 		// TODO Auto-generated constructor stub
 		if (checkFirstGame) {
 			for (int i = 0; i < 5; i++) {
