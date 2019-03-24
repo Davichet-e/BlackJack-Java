@@ -7,7 +7,7 @@ import java.util.Scanner;
 import BlackJackImpl.Deck;
 import BlackJackImpl.Deck.Card;
 
-public class BranchBlackJack {
+public class BlackJack {
 	private static boolean checkFirstGame = true;
 	public int actual_bet = 0;
 	public static int Actual_money = 0;
@@ -199,7 +199,7 @@ public class BranchBlackJack {
 			if (decision.toLowerCase().trim().equals("y") || decision.toLowerCase().trim().equals("yes")) {
 				checkFirstGame = false;
 				@SuppressWarnings("unused")
-				BranchBlackJack h = new BranchBlackJack();
+				BlackJack h = new BlackJack();
 			} else {
 				System.out.println("Thanks for playing, Your final balance is " + final_balance + "€\n");
 				ask_user.close();
