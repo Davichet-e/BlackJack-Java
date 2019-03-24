@@ -1,45 +1,28 @@
 package BlackJackImpl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Scanner;
+//The Deck class has been created by @natedane, I just made a few changes.
 
-public class BlackJack {
-	public static final String[] SUITS = { "♣", "♥", "♠", "♦" };
-	public static final Map<String, Integer> CARDS = new HashMap<String, Integer>();
-	static {
-		CARDS.put("ACE", 11);
-		CARDS.put("TWO", 2);
-		CARDS.put("THREE", 3);
-		CARDS.put("FOUR", 4);
-		CARDS.put("FIVE", 5);
-		CARDS.put("SIX", 6);
-		CARDS.put("SEVEN", 7);
-		CARDS.put("EIGTH", 8);
-		CARDS.put("NINE", 9);
-		CARDS.put("TEN", 10);
-		CARDS.put("JACK", 10);
-		CARDS.put("QUEEN", 10);
-		CARDS.put("KING", 10);
-	}
-	public static List<String> Possible_cards = new ArrayList<String>(CARDS.keySet());
-	public static List<List<String>> Human_cards = new ArrayList<>();
-	private static List<List<String>> Computer_cards = new ArrayList<>();
+import java.util.ArrayList;	
+import java.util.Scanner;
+import BlackJackImpl.Deck;
+import BlackJackImpl.Deck.Card;
+
+public class BranchBlackJack {
 	private static boolean checkFirstGame = true;
 	public int actual_bet = 0;
 	public static int Actual_money = 0;
 	public static int Initial_money = 0;
-	public int Human_points = 0;
-	private int Computer_points = 0;
+	public static int Human_points = 0;
+	private static int Computer_points = 0;
 	private int counter_computer = 0;
 	private boolean isAnInt = false;
 	private Scanner ask_user = new Scanner(System.in);
+	private static Deck myDeck = new Deck();
+	public ArrayList<Card> Human_cards = myDeck.getInitialCards();
+	private ArrayList<Card> Computer_cards = myDeck.getInitialCards();
 
-	public BlackJack() {
+	public BranchBlackJack() {
+		// TODO Auto-generated constructor stub
 		if (checkFirstGame) {
 			for (int i = 0; i < 5; i++) {
 				System.out.println("How much money do you have?\n");
@@ -60,27 +43,8 @@ public class BlackJack {
 
 		if (isAnInt) {
 			isAnInt = false;
-			Random rand = new Random();
-			List<String> toAdd1 = Arrays.asList(Possible_cards.get(rand.nextInt(Possible_cards.size())),
-					SUITS[rand.nextInt(SUITS.length)]);
-			List<String> toAdd2 = Arrays.asList(Possible_cards.get(rand.nextInt(Possible_cards.size())),
-					SUITS[rand.nextInt(SUITS.length)]);
-			Human_cards.clear();
-			Human_cards.add(toAdd1);
-			Human_cards.add(toAdd2);
-			for (int j = 0; j < Human_cards.size(); j++) {
-				Human_points += CARDS.get(Human_cards.get(j).get(0));
-			}
-			List<String> toAdd3 = Arrays.asList(Possible_cards.get(rand.nextInt(Possible_cards.size())),
-					SUITS[rand.nextInt(SUITS.length)]);
-			List<String> toAdd4 = Arrays.asList(Possible_cards.get(rand.nextInt(Possible_cards.size())),
-					SUITS[rand.nextInt(SUITS.length)]);
-			Computer_cards.clear();
-			Computer_cards.add(toAdd3);
-			Computer_cards.add(toAdd4);
-			for (int j = 0; j < Computer_cards.size(); j++) {
-				Computer_points += CARDS.get(Computer_cards.get(j).get(0));
-			}
+			Human_points = Deck.getSum(Human_cards);
+			Computer_points = Deck.getSum(Computer_cards);
 
 			check_ace();
 			check_bet();
@@ -91,7 +55,7 @@ public class BlackJack {
 	private void check_ace() {
 		ArrayList<String> cards = new ArrayList<String>();
 		for (int i = 0; i < Human_cards.size(); i++) {
-			cards.add(Human_cards.get(i).get(0));
+			cards.add(Human_cards.get(i).getName());
 		}
 		if (cards.contains("ACE")) {
 			if (Human_points > 21)
@@ -101,47 +65,40 @@ public class BlackJack {
 
 	private void check_bet() {
 		System.out.println("Your actual money is " + Actual_money);
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 10; i++) {
 			System.out.println("What bet do you wanna make?\n");
 			isAnInt = ask_user.hasNextInt();
 			if (isAnInt) {
 				isAnInt = false;
 				actual_bet = ask_user.nextInt();
 				ask_user.nextLine();
+				if (actual_bet > Actual_money) {
+					System.out.println("You cannot make a bet bigger than your actual money");
+					System.out.println("What bet do you wanna make?\n");
+					actual_bet = ask_user.nextInt();
+					ask_user.nextLine();
+				} else if (actual_bet <= 0) {
+					System.out.println("The bet must be greater than zero");
+					System.out.println("What bet do you wanna make?\n");
+					actual_bet = ask_user.nextInt();
+					ask_user.nextLine();
+				} else {
+					start_game();
+					break;
+				}
 
-				break;
 			} else {
 				System.out.println("Please, use only numbers");
 				ask_user.nextLine();
 			}
 		}
-		System.out.println(actual_bet);
-		for (int i = 0; i < 5; i++) {
 
-			if (actual_bet > Actual_money) {
-				System.out.println("You cannot make a bet bigger than your actual money");
-				System.out.println("What bet do you wanna make?\n");
-				actual_bet = ask_user.nextInt();
-				ask_user.nextLine();
-			} else if (actual_bet == 0) {
-				System.out.println("The bet must be greater than zero");
-				System.out.println("What bet do you wanna make?\n");
-				actual_bet = ask_user.nextInt();
-				ask_user.nextLine();
-			} else {
-				start_game();
-				break;
-			}
-
-		}
 	}
 
 	public void start_game() {
 		System.out.println("The game has started, it is your turn.\n");
-		System.out.println("Your cards are " + Human_cards.get(0).get(0) + " of " + Human_cards.get(0).get(1) + " and "
-				+ Human_cards.get(1).get(0) + " of " + Human_cards.get(1).get(1) + ".\n");
-		System.out.println("The first card of the bank is " + Computer_cards.get(0).get(0) + " of "
-				+ Computer_cards.get(0).get(1));
+		System.out.println("Your cards are " + Human_cards.get(0) + " and " + Human_cards.get(1) + ".\n");
+		System.out.println("The first card of the bank is " + Computer_cards.get(0));
 		human_win_lose_condition();
 		human_turn();
 	}
@@ -151,12 +108,12 @@ public class BlackJack {
 			System.out.println("Now it is the bank turn.");
 			counter_computer = 1;
 		}
-		update_points("computer");
+		Computer_points = Deck.getSum(Computer_cards);
 		for (int i = 0; i < 21; i++) {
 			if (i == 0)
 				System.out.print("The bank cards are: ");
 			try {
-				System.out.print(Computer_cards.get(i).get(0) + " of " + Computer_cards.get(i).get(1) + ", ");
+				System.out.print(Computer_cards.get(i) + ", ");
 			} catch (Exception e) {
 				System.out.println();
 				break;
@@ -165,10 +122,7 @@ public class BlackJack {
 
 		if (!computer_win_lose_condition()) {
 			if (Computer_points < Human_points) {
-				Random rand = new Random();
-				List<String> toAddComputer = Arrays.asList(Possible_cards.get(rand.nextInt(Possible_cards.size())),
-						SUITS[rand.nextInt(SUITS.length)]);
-				Computer_cards.add(toAddComputer);
+				Computer_cards.add(myDeck.dealCard());
 				computer_turn();
 			}
 		}
@@ -195,22 +149,19 @@ public class BlackJack {
 	}
 
 	private void human_turn() {
-		update_points("human");
+		Human_points = Deck.getSum(Human_cards);
 		check_ace();
 		if (!human_win_lose_condition()) {
 			System.out.println("Do you wanna hit? (y/n)\n");
 			String question = ask_user.nextLine();
-			if (question.contains("y") || question.contains("yes")) {
-				Random rand = new Random();
-				List<String> toAddHuman = Arrays.asList(Possible_cards.get(rand.nextInt(Possible_cards.size())),
-						SUITS[rand.nextInt(SUITS.length)]);
-				Human_cards.add(toAddHuman);
+			if (question.toLowerCase().trim().equals("y") || question.toLowerCase().trim().equals("yes")) {
+				Human_cards.add(myDeck.dealCard());
 
 				for (int i = 0; i < 21; i++) {
 					if (i == 0)
 						System.out.print("Now, your cards are: ");
 					try {
-						System.out.print(Human_cards.get(i).get(0) + " of " + Human_cards.get(i).get(1) + ", ");
+						System.out.print(Human_cards.get(i) + ", ");
 					} catch (Exception e) {
 						System.out.println();
 						break;
@@ -238,20 +189,6 @@ public class BlackJack {
 			return false;
 	}
 
-	private void update_points(String selection) {
-		if (selection == "human") {
-			Human_points = 0;
-			for (int j = 0; j < Human_cards.size(); j++) {
-				Human_points += CARDS.get(Human_cards.get(j).get(0));
-			}
-		} else {
-			Computer_points = 0;
-			for (int j = 0; j < Computer_cards.size(); j++) {
-				Computer_points += CARDS.get(Computer_cards.get(j).get(0));
-			}
-		}
-	}
-
 	private void reset() {
 		String final_balance = String.valueOf(Actual_money - Initial_money);
 		if (!final_balance.contains("-"))
@@ -259,10 +196,10 @@ public class BlackJack {
 		if (Actual_money > 0) {
 			System.out.println("Do you want to play again? (y/n)\n");
 			String decision = ask_user.nextLine();
-			if (decision.contains("y") || decision.contains("yes")) {
+			if (decision.toLowerCase().trim().equals("y") || decision.toLowerCase().trim().equals("yes")) {
 				checkFirstGame = false;
 				@SuppressWarnings("unused")
-				BlackJack h = new BlackJack();
+				BranchBlackJack h = new BranchBlackJack();
 			} else {
 				System.out.println("Thanks for playing, Your final balance is " + final_balance + "€\n");
 				ask_user.close();
