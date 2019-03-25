@@ -9,7 +9,7 @@ import BlackJackImpl.Deck.Card;
 import BlackJackImpl.Players.Player;
 import static BlackJackImpl.Players.getMyDeck;
 
-public class BranchBlackJack {
+public class BlackJack {
 	private static boolean checkFirstGame = true;
 	private int Computer_points = 0;
 	private int counter_computer = 0;
@@ -20,7 +20,7 @@ public class BranchBlackJack {
 	private ArrayList<Player> NonReplayPlayers = new ArrayList<Player>(5);
 	private static ArrayList<Player> Players = new ArrayList<Player>(5);
 
-	public BranchBlackJack() {
+	public BlackJack() {
 		if (checkFirstGame) {
 			System.out.println("How many people is it going to play? (0-5)");
 			int numberOfPeople = ask_user.nextInt();
@@ -165,7 +165,7 @@ public class BranchBlackJack {
 	private boolean player_win_lose_condition(Player p) {
 		if (p.getPoints() == 21) {
 			p.updateActualMoney(p.getActualBet());
-			System.out.println("BLACKJACK. Congratulations, you won " + p.getActualBet() * 2 + "€");
+			System.out.println("BLACKJACK. Congratulations, you won " + p.getActualBet() * 2 + "â‚¬");
 			return true;
 		} else if (p.getPoints() > 21) {
 			p.updateActualMoney(-p.getActualBet());
@@ -181,7 +181,7 @@ public class BranchBlackJack {
 			if (p.getPoints() != 21) {
 				if (p.getPoints() > Computer_points) {
 					p.updateActualMoney(p.getActualBet());
-					System.out.println(p.getName() + " won " + p.getActualBet() * 2 + "€.\n");
+					System.out.println(p.getName() + " won " + p.getActualBet() * 2 + "â‚¬.\n");
 				} else if (p.getPoints() == Computer_points) {
 					System.out.println(p.getName() + ", it is a Tie!.\n");
 				} else {
@@ -191,7 +191,7 @@ public class BranchBlackJack {
 					p.updateActualMoney(-p.getActualBet());
 				}
 			} else {
-				System.out.println(p.getName() + " won " + p.getActualBet() * 2 + "€.\n");
+				System.out.println(p.getName() + " won " + p.getActualBet() * 2 + "â‚¬.\n");
 			}
 		}
 		reset();
@@ -211,7 +211,7 @@ public class BranchBlackJack {
 				} else {
 
 					System.out.println(
-							"Thanks for playing, " + p.getName() + ", your final balance is " + final_balance + "€\n");
+							"Thanks for playing, " + p.getName() + ", your final balance is " + final_balance + "â‚¬\n");
 					NonReplayPlayers.add(p);
 					if (Players.isEmpty())
 						ask_user.close();
@@ -228,7 +228,7 @@ public class BranchBlackJack {
 		Players.removeAll(NonReplayPlayers);
 		if (!Players.isEmpty()) {
 			@SuppressWarnings("unused")
-			BranchBlackJack g = new BranchBlackJack();
+			BlackJack g = new BlackJack();
 		}
 	}
 
