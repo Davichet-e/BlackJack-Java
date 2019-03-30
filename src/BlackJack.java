@@ -1,7 +1,5 @@
 package BlackJackImpl;
 
-//The Deck class has been created by @natedane, I just made a few changes.
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
