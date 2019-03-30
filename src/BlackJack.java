@@ -44,8 +44,6 @@ public class BlackJack {
 
 			}
 
-
-
 		} else
 			isAnInt = true;
 		Players.removeAll(Collections.singleton(null));
@@ -53,59 +51,57 @@ public class BlackJack {
 
 	}
 
-	private void PlayerTurn(Player p) {
-		System.out.println(p.getName() + ", your actual money is " + p.getActualMoney());
-		if (!player_win_lose_condition(p)) {
-			for (int i = 0; i < 5; i++) {
-				System.out.println("What bet do you wanna make?\n");
-				isAnInt = ask_user.hasNextInt();
-				if (isAnInt) {
-					isAnInt = false;
-					p.setActualBet(ask_user.nextInt());
-					ask_user.nextLine();
-					if (p.getActualBet() > p.getActualMoney()) {
-						System.out.println("You cannot make a bet bigger than your actual money");
-						System.out.println("What bet do you wanna make?\n");
-						p.setActualBet(ask_user.nextInt());
-						ask_user.nextLine();
-					} else if (p.getActualBet() <= 0) {
-						System.out.println("The bet must be greater than zero");
-						System.out.println("What bet do you wanna make?\n");
-						p.setActualBet(ask_user.nextInt());
-						ask_user.nextLine();
-					} else
-						break;
-				} else
-					System.out.println("Please, use only numbers.\n");
-
-			}
-
-			System.out.println(
-					"Your turn has started.\nYour cards are " + p.getCards().get(0) + " and " + p.getCards().get(1));
-			for (int j = 0; j < 100; j++) {
-				if (!player_win_lose_condition(p)) {
-					System.out.println("Do you wanna hit? (y/n)\n");
-					String question = ask_user.nextLine();
-					if (question.toLowerCase().trim().equals("y") || question.toLowerCase().trim().equals("yes")) {
-						p.dealCard();
-						System.out.println(p.getPoints());
-						for (int i = 0; i < 21; i++) {
-							if (i == 0)
-								System.out.print("Now, your cards are: ");
-							try {
-								System.out.print(p.getCards().get(i) + ", ");
-							} catch (Exception e) {
-								System.out.println();
-								break;
-							}
-						}
-					} else {
-						System.out.println(p.getName() + " standed.");
-						break;
-					}
+	private void checkPlayerBet(Player p) {
+		for (int i = 0; i < 5; i++) {
+			System.out.println("What bet do you wanna make?\n");
+			isAnInt = ask_user.hasNextInt();
+			if (isAnInt) {
+				isAnInt = false;
+				p.setActualBet(ask_user.nextInt());
+				ask_user.nextLine();
+				if (p.getActualBet() > p.getActualMoney()) {
+					System.out.println("You cannot make a bet bigger than your actual money");
+				} else if (p.getActualBet() <= 0) {
+					System.out.println("The bet must be greater than zero");
 				} else
 					break;
+			} else {
+				ask_user.nextLine();
+				System.out.println("Please, use only numbers.\n");
 			}
+
+		}
+	}
+
+	private void PlayerTurn(Player p) {
+		System.out.println(p.getName() + ", your actual money is " + p.getActualMoney());
+		checkPlayerBet(p);
+		System.out.println(
+				"Your turn has started.\nYour cards are " + p.getCards().get(0) + " and " + p.getCards().get(1));
+		for (int j = 0; j < 100; j++) {
+			if (!player_win_lose_condition(p)) {
+				System.out.println("Do you wanna hit? (y/n)\n");
+				String question = ask_user.nextLine();
+				if (question.toLowerCase().trim().equals("y") || question.toLowerCase().trim().equals("yes")) {
+					p.dealCard();
+					System.out.println(p.getPoints());
+					for (int i = 0; i < 21; i++) {
+						if (i == 0)
+							System.out.print("Now, your cards are: ");
+						try {
+							System.out.print(p.getCards().get(i) + ", ");
+						} catch (Exception e) {
+							System.out.println();
+							break;
+						}
+					}
+				} else {
+					System.out.println(p.getName() + " standed.");
+					break;
+				}
+			} else
+				break;
+
 		}
 	}
 
@@ -165,7 +161,7 @@ public class BlackJack {
 	private boolean player_win_lose_condition(Player p) {
 		if (p.getPoints() == 21) {
 			p.updateActualMoney(p.getActualBet());
-			System.out.println("BLACKJACK. Congratulations, you won " + p.getActualBet() * 2 + "€");
+			System.out.println("BLACKJACK!");
 			return true;
 		} else if (p.getPoints() > 21) {
 			p.updateActualMoney(-p.getActualBet());
@@ -185,9 +181,7 @@ public class BlackJack {
 				} else if (p.getPoints() == Computer_points) {
 					System.out.println(p.getName() + ", it is a Tie!.\n");
 				} else {
-					System.out.println(p.getName() + " lost against the bank.\n");	
-					System.out.println(p.getPoints() + "p");
-					System.out.println(Computer_points);
+					System.out.println(p.getName() + " lost against the bank.\n");
 					p.updateActualMoney(-p.getActualBet());
 				}
 			} else {
@@ -231,4 +225,5 @@ public class BlackJack {
 			BlackJack g = new BlackJack();
 		}
 	}
+
 }
