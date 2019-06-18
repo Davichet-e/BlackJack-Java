@@ -1,13 +1,14 @@
 package BlackJackImpl;
 
-import java.util.ArrayList;
 import static java.util.Collections.shuffle;
+
+import java.util.ArrayList;
 import java.util.List;
 
 //This deck class has been originally created by @natedane, I just made a few changes 
 public class Deck {
 
-	private ArrayList<Card> deck;
+	private List<Card> deck;
 
 	public Deck() {
 		deck = new ArrayList<Card>(52);
@@ -15,10 +16,10 @@ public class Deck {
 			int value = i > 10 ? 10 : i;
 			if (i == 1)
 				value = 11;
-			deck.add(new Card("♣", valueToName(i), value, i));
-			deck.add(new Card("♥", valueToName(i), value, i));
-			deck.add(new Card("♠", valueToName(i), value, i));
-			deck.add(new Card("♦", valueToName(i), value, i));
+			deck.add(new Card("♣", valueToName(i), value));
+			deck.add(new Card("♥", valueToName(i), value));
+			deck.add(new Card("♠", valueToName(i), value));
+			deck.add(new Card("♦", valueToName(i), value));
 		}
 		shuffle(deck);
 	}
@@ -33,16 +34,16 @@ public class Deck {
 		return top;
 	}
 
-	public static int getSum(List<Card> computer_cards) {
+	public static int getSum(List<Card> cards) {
 		int points = 0;
-		for (Card one : computer_cards) {
+		for (Card one : cards) {
 			points += one.getValue();
 		}
 		return points;
 	}
 
-	public ArrayList<Card> getInitialCards() {
-		ArrayList<Card> hand = new ArrayList<Card>(deck.subList(0, 2));
+	public List<Card> getInitialCards() {
+		List<Card> hand = new ArrayList<Card>(deck.subList(0, 2));
 		deck.removeAll(hand);
 		return hand;
 	}
@@ -53,24 +54,22 @@ public class Deck {
 		return valueName[value - 1];
 	}
 
-	public class Card implements Comparable<Object> {
+	public class Card implements Comparable<Card> {
 		private String suit;
 		private String name;
 		private Integer value;
-		private Integer weight;
 
-		public Card(String suit, String name, int value, int weight) {
+		public Card(String suit, String name, int value) {
 			this.suit = suit;
 			this.name = name;
 			this.value = value;
-			this.weight = weight;
 		}
 
 		public String getName() {
 			return name;
 		}
 
-		public Integer getValue() {
+		public int getValue() {
 			return value;
 		}
 
@@ -79,10 +78,8 @@ public class Deck {
 		}
 
 		@Override
-		public int compareTo(Object compare) {
-			// TODO Auto-generated method stub
-			Card compCard = (Card) compare;
-			return this.weight - compCard.weight;
+		public int compareTo(Card compare) {
+			return value.compareTo(compare.getValue());
 		}
 
 	}
