@@ -3,15 +3,16 @@ package BlackJackImpl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import BlackJackImpl.Deck;
 import BlackJackImpl.Deck.Card;
 
-public class BlackJackHand {
+public class Hand {
 	public static Deck deck = new Deck();
 	private List<Card> cards;
 	private int points;
 	private int aces;
 
-	public BlackJackHand() {
+	public Hand() {
 		initializeAttributes();
 	}
 

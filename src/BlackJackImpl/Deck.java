@@ -16,10 +16,10 @@ public class Deck {
 			int value = i > 10 ? 10 : i;
 			if (i == 1)
 				value = 11;
-			deck.add(new Card("♣", valueToName(i), value));
-			deck.add(new Card("♥", valueToName(i), value));
-			deck.add(new Card("♠", valueToName(i), value));
-			deck.add(new Card("♦", valueToName(i), value));
+			deck.add(new Card('♥', valueToName(i), value));
+			deck.add(new Card('♦', valueToName(i), value));
+			deck.add(new Card('♣', valueToName(i), value));
+			deck.add(new Card('♠', valueToName(i), value));
 		}
 		shuffle(deck);
 	}
@@ -55,11 +55,11 @@ public class Deck {
 	}
 
 	public class Card implements Comparable<Card> {
-		private String suit;
+		private char suit;
 		private String name;
 		private Integer value;
 
-		public Card(String suit, String name, int value) {
+		public Card(char suit, String name, int value) {
 			this.suit = suit;
 			this.name = name;
 			this.value = value;

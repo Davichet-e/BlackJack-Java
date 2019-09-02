@@ -1,5 +1,6 @@
 package BlackJackImpl;
 
+
 //The Deck class has been created by @natedane, I just made a few changes.
 
 import java.util.ArrayList;
@@ -9,10 +10,10 @@ import java.util.Scanner;
 
 public class BlackJack {
 	private static Scanner askUser = new Scanner(System.in);
-	private static BlackJackHand dealerHand = new BlackJackHand();
+	private static Hand dealerHand = new Hand();
 	private static List<Player> players = new ArrayList<Player>();
 
-	public static void blackJack() {
+	public static void main(String[] args) {
 		startGame();
 		while (true) {
 			System.out.println("Game started");
@@ -31,13 +32,13 @@ public class BlackJack {
 
 	private static void startGame() {
 		int numberOfPeople = askNumberOfPeople();
-		askAndSetPlayerAtributes(numberOfPeople);
+		askAndSetPlayerAttributes(numberOfPeople);
 	}
 
 	private static int askNumberOfPeople() {
 		int numberOfPeople = 0;
 		while (true) {
-			System.out.println("How many people are going to play? (0-5)");
+			System.out.println("How many people are going to play? (1-5)");
 			try {
 				numberOfPeople = askUser.nextInt();
 				askUser.nextLine();
@@ -86,12 +87,12 @@ public class BlackJack {
 			try {
 				int bet = askUser.nextInt();
 				askUser.nextLine();
-				if (bet > player.actualMoney) {
+				if (bet > player.getActualMoney()) {
 					System.out.println("You cannot make a bet bigger than your actual money");
 				} else if (bet <= 0) {
 					System.out.println("The bet must be greater than zero");
 				} else {
-					player.actualBet = bet;
+					player.bet(bet);
 					break;
 				}
 
@@ -117,10 +118,11 @@ public class BlackJack {
 
 	private static boolean playerWinOrLose(Player player) {
 		boolean result = false;
-		if (player.getPoints() == 21) {
+		int playerPoints = player.getHand().getPoints();
+		if (playerPoints == 21) {
 			System.out.println("BLACKJACK!");
 			result = true;
-		} else if (player.getPoints() == 0) {
+		} else if (playerPoints == 0) {
 			System.out.println("BUST!\nI'm afraid you lose this game :(\n");
 			result = true;
 		}
@@ -128,14 +130,14 @@ public class BlackJack {
 	}
 
 	private static void playerTurn(Player player) {
-		System.out.println(player + ", your actual money is " + player.actualMoney);
+		System.out.println(player + ", your actual money is " + player.getActualMoney());
 		askPlayerBet(player);
-		System.out.println("Your turn has started.\nYour cards are " + player.getCards().get(0) + " and "
-				+ player.getCards().get(1));
+		System.out.println("Your turn has started.\nYour cards are " + player.getHand().getCards().get(0) + " and "
+				+ player.getHand().getCards().get(1));
 		while (!playerWinOrLose(player)) {
 			if (askIfHit()) {
-				player.dealCard();
-				System.out.println("Now, your cards are: " + player.hand());
+				player.getHand().dealCard();
+				System.out.println("Now, your cards are: " + player.getHand());
 			} else {
 				System.out.println(player + " standed.");
 				break;
@@ -164,11 +166,12 @@ public class BlackJack {
 
 	private static void endGame() {
 		for (Player player : players) {
-			if (player.getPoints() == 21 || player.getPoints() > dealerHand.getPoints()) {
-				player.actualMoney += player.actualBet;
-				System.out.println(player + " won " + player.actualBet * 2 + "€. :)\n");
-			} else if (player.getPoints() == 0 || player.getPoints() < dealerHand.getPoints()) {
-				player.actualMoney -= player.actualBet;
+			int playerPoints = player.getHand().getPoints();
+			if (playerPoints == 21 || playerPoints > dealerHand.getPoints()) {
+				player.win();
+				System.out.println(player + " won " + player.getActualBet() * 2 + "€. :)\n");
+			} else if (playerPoints == 0 || playerPoints < dealerHand.getPoints()) {
+				player.lose();
 				System.out.println(player + " lost against the dealer :(\n");
 			} else
 				System.out.println(player + " it is a Tie :|");
@@ -178,14 +181,14 @@ public class BlackJack {
 
 	private static boolean askIfNextGame(Player player) {
 		boolean playerResets = false;
-		String finalBalance = String.valueOf(player.actualMoney - player.initialMoney) + " €";
+		String finalBalance = String.valueOf(player.getActualMoney() - player.getInitialMoney()) + " €";
 		if (!finalBalance.contains("-"))
 			finalBalance = "+" + finalBalance;
 
-		if (player.actualMoney > 0) {
+		if (player.getActualMoney() > 0) {
 			System.out.println(player + ", do you want to play again? (y/n)");
 			if (checkIfYes()) {
-				player.initializeAttributes();
+				player.getHand();
 				playerResets = true;
 			} else
 				System.out.println("Thanks for playing, " + player + " your final balance is " + finalBalance);

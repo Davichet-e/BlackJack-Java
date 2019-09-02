@@ -1,19 +1,50 @@
 package BlackJackImpl;
 
-public class Player extends BlackJackHand {
-	public final String name;
-	public final int initialMoney;
-	public int actualMoney, actualBet;
+public class Player {
+	private final Hand hand;
+	private final String name;
+	private final int initialMoney;
+	private int actualMoney, actualBet;
 
 	public Player(String name, int initialMoney) {
-		super();
 		this.name = name;
 		this.initialMoney = initialMoney;
 		this.actualMoney = initialMoney;
+		this.hand = new Hand();
 	}
 
-	public String hand() {
-		return super.toString();
+	
+	
+	public int getActualMoney() {
+		return actualMoney;
+	}
+	
+	public void bet(int bet) {
+		actualBet = bet;
+	}
+	
+	public void win() {
+		actualMoney += actualBet;
+	}
+	
+	public void lose() {
+		actualMoney -= actualBet;
+	}
+
+	public Hand getHand() {
+		return hand;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getInitialMoney() {
+		return initialMoney;
+	}
+
+	public int getActualBet() {
+		return actualBet;
 	}
 
 	@Override
